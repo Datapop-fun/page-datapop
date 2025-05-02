@@ -1,0 +1,40 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    color: #111827;
+  }
+  
+  .container {
+    display: flex;
+    gap: 2rem;
+    max-width: 960px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  
+  .image {
+    width: 200px;
+    height: 200px;
+    border-radius: 0.5rem;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .textBlock {
+    flex: 1;
+    min-width: 280px;
+  }
+  
+  .title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .paragraph {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  
