@@ -4,6 +4,13 @@
     height: 100vh;
     z-index: 0; /* En el flujo normal */
     overflow: hidden;
+
+    /* -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%; */
   }
   
   .player {
@@ -12,3 +19,5 @@
     left: 0;
   }
   
+  
+

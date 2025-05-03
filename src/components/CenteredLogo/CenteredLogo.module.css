@@ -1,0 +1,40 @@
+.wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  pointer-events: none;
+  animation: fadeIn 1.2s ease-in-out 1s both;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  transform: translateY(-10%); /* empuja visualmente hacia el centro */
+}
+
+.logo {
+  width: 480px;
+  max-width: 90vw;
+  height: auto;
+}
+
+.banner {
+  width: 540px;
+  max-width: 95vw;
+  height: auto;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
