@@ -16,7 +16,6 @@ export default function Home() {
         <FloatingLogo/>
         <ConnectButton/>
       </div>
-      {/* <InfoBlock/> */}
     </>
   )
 }
