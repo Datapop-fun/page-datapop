@@ -3,7 +3,6 @@
 import Background from "@/components/Background/Background"
 import CenteredLogo from "@/components/CenteredLogo/CenteredLogo"
 import ConnectButton from "@/components/ConnectButton/ConnectButton"
-import FloatingLogo from "@/components/FloatingLogo/FloatingLogo"
 import FullscreenVideo from "@/components/FullscreenVideo/FullscreenVideo"
 
 export default function Home() {
@@ -13,7 +12,6 @@ export default function Home() {
       <div style={{ position: 'relative' }}>
         <FullscreenVideo />
         <CenteredLogo />
-        <FloatingLogo/>
         <ConnectButton/>
       </div>
     </>
