@@ -1,15 +1,18 @@
 'use client'
 
 import styles from './InfoBlock.module.css'
+import Image from "next/image";
 
 export default function InfoBlock() {
   return (
     <section className={styles.wrapper}>
       <div className={styles.container}>
-        <img
+        <Image
           className={styles.image}
           src="https://source.unsplash.com/200x200/?data,visualization"
           alt="Logo gráfico de visualización de datos"
+          width={200}
+          height={200}
         />
         <div className={styles.textBlock}>
           <h2 className={styles.title}>Dataview Insights</h2>

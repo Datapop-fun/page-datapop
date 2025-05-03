@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import styles from './FloatingLogo.module.css'
+import Image from "next/image";
 
 export default function FloatingLogo() {
   const [visible, setVisible] = useState(false)
@@ -13,10 +14,12 @@ export default function FloatingLogo() {
 
   return (
     <div className={`${styles.logoWrapper} ${visible ? styles.visible : ''}`}>
-      <img
+      <Image
         src="/Menu-Logo.svg"
         alt="Logo"
         style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+        width={48}
+        height={48}
       />
     </div>
   )
