@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Lottie from 'lottie-react'
 import styles from './ConnectButton.module.css'
 import animationData from '../../assets/lottie/data.json'
+import Lottie from './LottieNoSSR'  
 
 export default function ConnectButton() {
   const [visible, setVisible] = useState(false)
