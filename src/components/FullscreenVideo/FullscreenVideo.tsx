@@ -22,16 +22,17 @@ export default function FullscreenVideo() {
 
   return (
     <div className={styles.wrapper}>
-      <ReactPlayer
-        url={videoUrl}
-        playing
-        loop
-        controls={false}
-        muted
-        width="100%"
-        height="100%"
-        className={`${styles.player} ${isMobile ? styles.mobile : ''}`}
-      />
+      <div className={isMobile ? styles.videoMobile : styles.videoDesktop}>
+        <ReactPlayer
+          url={videoUrl}
+          playing
+          loop
+          controls={false}
+          muted
+          width="100%"
+          height="100%"
+        />
+      </div>
     </div>
   )
 }
