@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "vercel-check": "next build && eslint . --ext js,jsx,ts,tsx && tsc --noEmit"
   },
   "dependencies": {
     "@lottiefiles/lottie-player": "^2.0.12",

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Lottie from 'lottie-react'
 import styles from './ConnectButton.module.css'
-import animationData from '@/assets/lottie/data.json'
+import animationData from '../../assets/lottie/data.json'
 
 export default function ConnectButton() {
   const [visible, setVisible] = useState(false)
