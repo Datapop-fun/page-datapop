@@ -14,19 +14,28 @@ export default function ConnectButton() {
   }, [])
 
   return visible ? (
-    <a
-      href="https://docs.google.com/forms/d/1NQckB71uwqESpom6HejgyFW7yUO4h5LXTXqAX7LFLTw/edit"
-      className={styles.wrapper}
-      aria-label="Ir a formulario de contacto"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <Lottie
-        animationData={animationData}
-        loop
-        autoplay
-        className={styles.lottie}
-      />
-    </a>
+<a
+  href="https://docs.google.com/forms/d/1NQckB71uwqESpom6HejgyFW7yUO4h5LXTXqAX7LFLTw/edit"
+  className={styles.wrapper}
+  aria-label="Ir a formulario de contacto"
+  target="_blank"
+  rel="noopener noreferrer"
+  onClick={() => {
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'click', {
+        event_category: 'contact',
+        event_label: 'Connect Form',
+        value: 1,
+      });
+    }
+  }}
+>
+  <Lottie
+    animationData={animationData}
+    loop
+    autoplay
+    className={styles.lottie}
+  />
+</a>
   ) : null
 }
