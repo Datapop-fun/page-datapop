@@ -25,7 +25,7 @@ export default function ConnectButton() {
 
   return visible ? (
     <a
-      href="https://docs.google.com/forms/d/1NQckB71uwqESpom6HejgyFW7yUO4h5LXTXqAX7LFLTw/edit"
+      href="/form"
       className={styles.wrapper}
       aria-label="Ir a formulario de contacto"
       target="_blank"

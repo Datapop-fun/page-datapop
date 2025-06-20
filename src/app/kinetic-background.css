@@ -1,0 +1,29 @@
+#kinetic-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+  font-family: 'Roboto Mono', 'Menlo', 'Courier New', Courier, monospace;
+  pointer-events: none;
+}
+
+#grid {
+  display: grid;
+  position: absolute;
+  will-change: transform;
+  top: -100px;
+  left: -100px;
+  width: calc(100vw + 200px);
+  height: calc(100vh + 200px);
+}
+
+.grid-item {
+  color: #333;
+  white-space: pre;
+  text-align: center;
+  transition: color 0.4s ease-out, transform 0.4s ease-out;
+  will-change: transform, color;
+}
