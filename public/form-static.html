@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataPop | Conecta con los Datos</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                overflow: auto;
+            }
+
+            #kinetic-bg {
+                display: none;
+            }
+        }
+        
+        #root {
+            z-index: 10;
+        }
+
+        .font-monospace {
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        /* --- Estilos del Fondo Interactivo --- */
+        #kinetic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; 
+            overflow: hidden;
+            font-family: 'Roboto Mono', 'Menlo', 'Courier New', Courier, monospace;
+        }
+
+        #grid {
+            display: grid;
+            position: absolute;
+            will-change: transform;
+            top: -100px;
+            left: -100px;
+            width: calc(100% + 200px);
+            height: calc(100% + 200px);
+        }
+
+        .grid-item {
+            color: #333;
+            white-space: pre; 
+            text-align: center;
+            transition: color 0.4s ease-out, transform 0.4s ease-out;
+            will-change: transform, color;
+        }
+
+        /* --- Animaciones y Estilos para botones --- */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(74, 0, 255, 0.6); transform: scale(1); }
+            50% { box-shadow: 0 0 35px rgba(74, 0, 255, 0.9); transform: scale(1.05); }
+        }
+
+        .start-button {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(145deg, #1f006e, #4a00ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+
+        .start-button:hover {
+            width: 280px;
+            border-radius: 50px;
+            animation: none;
+        }
+
+        .start-button .icon {
+            position: absolute;
+            width: 44px;
+            height: 44px;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        .start-button:hover .icon {
+            left: 25px;
+            width: 30px;
+            height: 30px;
+        }
+
+        .start-button .text {
+            position: absolute;
+            right: 45px;
+            opacity: 0;
+            transform: translateX(-20px);
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+            transition: opacity 0.4s 0.2s ease, transform 0.4s 0.2s ease;
+        }
+
+        .start-button:hover .text {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .pupil { transition: all 0.3s ease-in-out; }
+        .start-button:hover .pupil { transform: scale(1.2); }
+        
+        .next-button-ready {
+            animation: pulse-glow 2.5s infinite ease-in-out;
+        }
+
+        /* --- Estilos para Dark Mode en Modales --- */
+        .modal-container {
+             /* El fondo del overlay es transparente para ver el fondo animado */
+        }
+        .modal-content {
+            position: relative; /* Contexto para el botón de cierre */
+            background: linear-gradient(160deg, rgba(31, 41, 55, 0.9), rgba(17, 24, 39, 0.95));
+            backdrop-filter: blur(4px);
+        }
+        
+        @media (max-width: 768px) {
+            .modal-content {
+                backdrop-filter: none;
+            }
+        }
+        
+        .background-logo {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            width: 40px;
+            height: 40px;
+            background-image: url("https://i.ibb.co/mCQkMXxz/Iso-Datapop.png");
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.7;
+            z-index: 50;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        .background-logo:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            z-index: 20;
+        }
+        .close-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+        
+        .modal-logo {
+            width: 40px;
+            height: auto;
+            margin: 0 auto 1.5rem;
+            opacity: 0.9;
+        }
+        
+        .dark-form-input {
+            background-color: #374151;
+            border-color: #4b5563;
+            color: #f3f4f6;
+        }
+        .dark-form-input::placeholder { color: #9ca3af; }
+        .dark-form-input:focus {
+            outline: 2px solid #4a00ff;
+            outline-offset: 2px;
+            box-shadow: none;
+            border-color: #4a00ff;
+        }
+        
+        .dark-choice-label {
+            background-color: #1f2937;
+            border-color: #4b5563;
+        }
+        .dark-choice-label:hover {
+            background-color: #374151;
+            border-color: #5d3eff;
+        }
+        
+        .dark-choice-label.checked {
+            background-color: #26194d;
+            border-color: #4a00ff;
+        }
+        
+        .dark-radio:checked, .dark-checkbox:checked {
+            background-color: #4a00ff;
+            border-color: #4a00ff;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -500px 0; }
+            100% { background-position: 500px 0; }
+        }
+        .progress-bar-inner {
+            background: linear-gradient(to right, #4a00ff 20%, #a259ff 50%, #4a00ff 80%);
+            background-size: 500px 100%;
+            animation: shimmer 2s infinite linear;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.5s ease-in-out forwards; }
+        .fade-out { animation: fadeOut 0.5s ease-in-out forwards; }
+        .fade-in-up { animation: fadeInUp 0.5s ease-in-out forwards; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback } = React;
+
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzr-J7c-ziud8NCkZEV8q0Ga8v1nuEK6hY2dJk0-7R5mOFnYq5BFJ6Si03vh3qbqm8Eag/exec";
+        
+        const LOGO_URL = "./iso-datapop.png";
+
+        const sections = [
+            { 
+                title: "Datos de Usuario", 
+                description: "Comencemos con algunos datos básicos para conocerte.",
+                questions: [
+                    { id: 'fullName', text: 'Nombre completo', type: 'text', placeholder: 'Tu nombre y apellido' },
+                    { id: 'email', text: 'Correo Electrónico', type: 'email', placeholder: 'tu@email.com' },
+                    { id: 'company', text: 'Empresa o Proyecto (si aplica)', type: 'text', placeholder: 'Nombre de tu empresa' },
+                    { id: 'role', text: '¿Cuál es tu rol o cargo dentro de la empresa o proyecto?', type: 'text', placeholder: 'Ej: Gerente de Marketing' },
+                ]
+            },
+            {
+                title: "Experiencia y Necesidades Generales",
+                description: "Ahora, cuéntanos un poco sobre tu relación con los datos.",
+                questions: [
+                    { id: 'familiarity', text: '¿Qué tan familiarizado estás con el uso de visualizaciones de datos interactivas?', type: 'radio', options: ['Muy familiarizado, uso visualizaciones interactivas regularmente', 'Algo familiarizado, he usado visualizaciones interactivas en ocasiones', 'Poco familiarizado, he visto algunas visualizaciones pero no las uso frecuentemente', 'No estoy familiarizado, nunca he usado visualizaciones interactivas'] },
+                    { id: 'dataType', text: '¿Qué tipo de datos manejas en tu empresa o proyecto?', type: 'checkbox', options: ['Datos financieros (ingresos, gastos, etc.)', 'Datos de ventas y marketing', 'Datos de rendimiento (KPIs, métricas)', 'Datos geoespaciales (mapas)', 'Datos de usuarios o clientes', 'Datos científicos o de investigación', 'Otro'] },
+                    { id: 'audience', text: '¿Quién es la audiencia de sus visualizaciones?', type: 'checkbox', options: ['Interna', 'Externa', 'Ejecutivos', 'Público general'] },
+                    { id: 'context', text: '¿En qué contexto planeas utilizar los servicios de visualización de datos interactivos?', type: 'radio', options: ['Para análisis interno en mi empresa o proyecto', 'Para presentar datos a clientes o stakeholders', 'Para la toma de decisiones estratégicas', 'Para informes o presentaciones visuales', 'Otro'] },
+                ]
+            },
+            {
+                title: "Interactividad y Preferencias de Visualización",
+                description: "Hablemos de cómo te gusta ver y interactuar con los gráficos.",
+                questions: [
+                    { id: 'audienceDifficulty', text: '¿Has tenido dificultades para que tu audiencia entienda o se interese por los gráficos/reportes que presentas?', type: 'radio', options: ['Si', 'No'] },
+                    { id: 'preferredVisualization', text: '¿Qué tipo de visualización de datos prefieres?', type: 'checkbox', options: ['Gráficos de barras o columnas', 'Gráficos de líneas', 'Gráficos circulares o de pie', 'Mapas interactivos', 'Tablas interactivas', 'Diagramas de dispersión', 'Dashboards o paneles de control', 'Otro'] },
+                    { id: 'interactivityLevel', text: '¿Qué nivel de interactividad te gustaría tener en las visualizaciones?', type: 'radio', options: ['Muy interactiva, con filtros, zoom, selección de rangos, etc.', 'Moderadamente interactiva, con opciones básicas de exploración', 'Baja interactividad, solo necesito ver los datos visualizados', 'No me interesa la interactividad, prefiero visualizaciones estáticas'] },
+                    { id: 'customization', text: '¿Te gustaría tener la opción de personalizar las visualizaciones?', type: 'radio', options: ['Sí, me gustaría personalizar las visualizaciones a mi gusto', 'No, prefiero las visualizaciones predeterminadas', 'No estoy seguro'] },
+                ]
+            },
+            {
+                title: "Diseño y Navegación de la Página",
+                description: "Tu opinión sobre el diseño y la experiencia de usuario es muy importante.",
+                questions: [
+                    { id: 'navigationImportance', text: '¿Qué tan importante es para ti que la página sea fácil de navegar?', type: 'radio', options: ['Muy importante, necesito encontrar lo que busco rápidamente', 'Moderadamente importante, prefiero una navegación sencilla', 'No es tan importante, siempre que la información esté clara'] },
+                    { id: 'designPreference', text: '¿Qué tipo de diseño prefieres para la visualización de datos en una página web?', type: 'radio', options: ['Diseño minimalista y limpio', 'Diseño dinámico con muchos colores', 'Diseño profesional y serio', 'Diseño moderno y tecnológico', 'Otro'] },
+                    { id: 'pageSections', text: '¿Qué secciones te gustaría que nuestra página tuviera para mejorar tu experiencia?', type: 'radio', options: ['Sección de tutoriales o guías', 'Casos de estudio o ejemplos', 'FAQ o preguntas frecuentes', 'Blog o artículos relacionados', 'Integración con herramientas externas'] },
+                    { id: 'suggestions', text: 'Sugerencias:', type: 'textarea', placeholder: '¿Tienes alguna otra sugerencia para nosotros?' },
+                ]
+            },
+             {
+                title: "Accesibilidad y Dispositivos",
+                description: "Asegurémonos de que todos puedan acceder a los datos.",
+                questions: [
+                    { id: 'devicePreference', text: '¿En qué dispositivo prefieres acceder a las visualizaciones de datos?', type: 'radio', options: ['Computadora de escritorio', 'Computadora portátil', 'Teléfono móvil', 'Tableta', 'Otros'] },
+                    { id: 'accessibilityImportance', text: '¿Es importante para ti que la página esté optimizada para usuarios con discapacidades?', type: 'radio', options: ['Sí, es muy importante', 'Es moderadamente importante', 'No es una prioridad para mí'] },
+                ]
+            },
+            {
+                title: "Expectativas y Feedback",
+                description: "Últimas preguntas para entender tus metas y prioridades.",
+                questions: [
+                    { id: 'goal', text: '¿Qué te gustaría lograr con una visualización de datos interactiva en la página web?', type: 'radio', options: ['Analizar y tomar decisiones basadas en datos', 'Presentar resultados visualmente atractivos', 'Realizar comparaciones entre diferentes conjuntos de datos', 'Monitorizar métricas o KPIs en tiempo real', 'Otro'] },
+                    { id: 'decisionFactor', text: '¿Cuál de estos factores sería más importante para que decidas contratar o usar un servicio de visualización?', type: 'radio', options: ['Facilidad de uso y accesibilidad', 'Calidad y personalización', 'Precios competitivos', 'Tiempo de entrega y soporte', 'Integración con mis sistemas', 'Otro'] },
+                    { id: 'finalThoughts', text: '¿Hay algún aspecto que no hemos cubierto y que crees que es esencial?', type: 'textarea', placeholder: 'Tus comentarios finales son muy valiosos' }
+                ]
+            }
+        ];
+
+        // --- Componente para el Fondo Interactivo ---
+        const KineticBackground = () => {
+            const gridRef = useRef(null);
+            const animationFrameId = useRef(null);
+
+            useEffect(() => {
+                const grid = gridRef.current;
+                if (!grid) return;
+
+                const isMobile = window.innerWidth <= 768;
+
+                const TEXT = "Datapop";
+                const PADDING_CHARS = isMobile ? 6 : 3; 
+                const FONT_SIZE_PX = isMobile ? 20 : 16; 
+                const MOUSE_EFFECT_RADIUS = 250; 
+                const DRIFT_SPEED = 0.00005;
+                const DRIFT_AMPLITUDE = 50;
+                const GLITCH_CHARS = 'ABCDEF0123456789';
+                
+                const baseColor = { r: 51, g: 51, b: 51 };
+                const targetColor = { r: 74, g: 0, b: 255 };
+
+                let gridItems = [];
+                let lastMouseX = -10000;
+                let lastMouseY = -10000;
+                let glitchIntensity = 0;
+                const fullText = TEXT + ' '.repeat(PADDING_CHARS);
+
+               const debounce = (func) => {
+                    let frame;
+                    return (...args) => {
+                        if (frame) {
+                            cancelAnimationFrame(frame);
+                        }
+                        frame = requestAnimationFrame(() => {
+                            func(...args);
+                        });
+                    };
+                };
+            
+                const createGrid = () => {
+                    grid.innerHTML = '';
+                    gridItems = [];
+                    const charWidth = FONT_SIZE_PX * 0.6;
+                    const cellWidth = (TEXT.length + PADDING_CHARS) * charWidth;
+                    const cellHeight = FONT_SIZE_PX * 1.5;
+
+                    const cols = Math.ceil(grid.clientWidth / cellWidth);
+                    const rows = Math.ceil(grid.clientHeight / cellHeight);
+
+                    grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+                    for (let i = 0; i < cols * rows; i++) {
+                        const span = document.createElement('span');
+                        span.className = 'grid-item';
+                        span.style.fontSize = `${FONT_SIZE_PX}px`;
+                        span.textContent = fullText;
+                        grid.appendChild(span);
+                        
+                        const x = (i % cols + 0.5) * cellWidth;
+                        const y = (Math.floor(i / cols) + 0.5) * cellHeight;
+                        
+                        gridItems.push({ element: span, x, y, lastEffect: 0 });
+                    }
+                };
+            
+                const animationLoop = () => {
+                    const now = Date.now();
+                    
+                    const driftX = Math.sin(now * DRIFT_SPEED) * DRIFT_AMPLITUDE;
+                    const driftY = Math.cos(now * DRIFT_SPEED * 0.8) * DRIFT_AMPLITUDE;
+                    grid.style.transform = `translate(${driftX}px, ${driftY}px)`;
+
+                    const gridRect = grid.getBoundingClientRect();
+                    const relativeMouseX = lastMouseX - gridRect.left;
+                    const relativeMouseY = lastMouseY - gridRect.top;
+
+                    for (const item of gridItems) {
+                        const distance = Math.sqrt(Math.pow(item.x - relativeMouseX, 2) + Math.pow(item.y - relativeMouseY, 2));
+                        let effect = (distance < MOUSE_EFFECT_RADIUS) ? 1 - (distance / MOUSE_EFFECT_RADIUS) : 0;
+                        
+                        if (Math.abs(effect - item.lastEffect) > 0.01) {
+                            const scale = 1 + (0.5 * effect);
+                            const r = baseColor.r + (targetColor.r - baseColor.r) * effect;
+                            const g = baseColor.g + (targetColor.g - baseColor.g) * effect;
+                            const b = baseColor.b + (targetColor.b - baseColor.b) * effect;
+
+                            item.element.style.transform = `scale(${scale})`;
+                            item.element.style.color = `rgb(${Math.floor(r)}, ${Math.floor(g)}, ${Math.floor(b)})`;
+                            item.lastEffect = effect;
+                        }
+                        
+                        if (glitchIntensity > 0.01) {
+                            let glitchedText = '';
+                            for (let i = 0; i < TEXT.length; i++) {
+                                if (Math.random() < glitchIntensity) {
+                                    glitchedText += GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
+                                } else {
+                                    glitchedText += TEXT[i];
+                                }
+                            }
+                            item.element.textContent = glitchedText + ' '.repeat(PADDING_CHARS);
+                        } else {
+                            if (item.element.textContent !== fullText) {
+                                item.element.textContent = fullText;
+                            }
+                        }
+                    }
+                    
+                    glitchIntensity *= 0.94;
+                    animationFrameId.current = requestAnimationFrame(animationLoop);
+                };
+
+                const handleMouseDown = () => { glitchIntensity = 1.0; };
+                const handleMouseMove = (e) => { lastMouseX = e.clientX; lastMouseY = e.clientY; };
+                const handleMouseLeave = () => { lastMouseX = -10000; lastMouseY = -10000; };
+                const debouncedCreateGrid = debounce(createGrid, 250);
+
+                window.addEventListener('mousemove', handleMouseMove);
+                window.addEventListener('mouseleave', handleMouseLeave);
+                window.addEventListener('mousedown', handleMouseDown);
+                window.addEventListener('resize', debouncedCreateGrid);
+
+                createGrid();
+                animationLoop();
+
+                // Cleanup function
+                return () => {
+                    cancelAnimationFrame(animationFrameId.current);
+                    window.removeEventListener('mousemove', handleMouseMove);
+                    window.removeEventListener('mouseleave', handleMouseLeave);
+                    window.removeEventListener('mousedown', handleMouseDown);
+                    window.removeEventListener('resize', debouncedCreateGrid);
+                };
+            }, []); // El array vacío asegura que esto se ejecute solo una vez
+
+            return (
+                <div id="kinetic-bg">
+                    <div id="grid" ref={gridRef}></div>
+                </div>
+            );
+        };
+
+       const BackgroundLogo = () => (
+            <a 
+                href="https://www.datapop.fun/"
+                className="background-logo"
+                aria-label="Ir a la página de inicio de Datapop"
+                style={{ backgroundImage: `url(${LOGO_URL})` }}
+            ></a>
+        );
+
+
+        // --- Main App Component ---
+        const App = () => {
+            const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
+            const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+            const [formData, setFormData] = useState({});
+            const [view, setView] = useState('welcome');
+            const [submissionStatus, setSubmissionStatus] = useState('idle');
+            const [isStepComplete, setIsStepComplete] = useState(false);
+
+            const brandColor = "#4a00ff";
+            
+            const currentQuestionData = sections[currentSectionIndex]?.questions[currentQuestionIndex];
+
+            const totalQuestions = sections.reduce((total, section) => total + section.questions.length, 0);
+            const questionsAnswered = sections.slice(0, currentSectionIndex).reduce((total, section) => total + section.questions.length, 0) + currentQuestionIndex;
+            const progressPercentage = (questionsAnswered / totalQuestions) * 100;
+
+            const handleInputChange = useCallback((e) => {
+                const { name, value, type, checked } = e.target;
+                setFormData(prevData => {
+                    if (type === 'checkbox') {
+                        const currentValues = prevData[name] || [];
+                        const newValues = checked ? [...currentValues, value] : currentValues.filter(item => item !== value);
+                        return { ...prevData, [name]: newValues };
+                    }
+                    return { ...prevData, [name]: value };
+                });
+            }, []);
+            
+            useEffect(() => {
+                if (!currentQuestionData) return;
+                const data = formData[currentQuestionData.id];
+                let isComplete = (data && (Array.isArray(data) ? data.length > 0 : String(data).trim() !== ''));
+                setIsStepComplete(isComplete);
+            }, [formData, currentQuestionIndex, currentQuestionData?.id]);
+
+            const handleFormSubmit = (finalData) => {
+                setView('submitting');
+                
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(finalData)
+                })
+                .then(() => { setSubmissionStatus('success'); setView('finished'); })
+                .catch(error => { console.error('Error al enviar el formulario:', error); setSubmissionStatus('error'); setView('finished'); });
+            };
+
+            const nextStep = () => {
+                if (!isStepComplete) return;
+
+                const currentSection = sections[currentSectionIndex];
+                const isLastQuestionInSection = currentQuestionIndex === currentSection.questions.length - 1;
+                const isLastSection = currentSectionIndex === sections.length - 1;
+
+                if (isLastQuestionInSection && isLastSection) { handleFormSubmit(formData); }
+                else if (isLastQuestionInSection) { setCurrentSectionIndex(p => p + 1); setCurrentQuestionIndex(0); setView('section'); }
+                else { setCurrentQuestionIndex(p => p + 1); }
+            };
+
+            const prevStep = () => {
+                if (currentQuestionIndex > 0) { setCurrentQuestionIndex(p => p - 1); }
+                else if (currentSectionIndex > 0) {
+                    const prevIdx = currentSectionIndex - 1;
+                    setCurrentSectionIndex(prevIdx);
+                    setCurrentQuestionIndex(sections[prevIdx].questions.length - 1);
+                    setView('section');
+                }
+            };
+
+            const resetForm = () => {
+                 setFormData({});
+                 setCurrentSectionIndex(0);
+                 setCurrentQuestionIndex(0);
+                 setSubmissionStatus('idle');
+                 setView('welcome');
+            };
+            
+            const currentSectionData = sections[currentSectionIndex];
+
+            const renderInput = (question) => {
+                const commonInputClass = "w-full p-3 rounded-md border-2 dark-form-input transition font-monospace text-sm";
+                switch (question.type) {
+                    case 'email': case 'text':
+                        return <input type={question.type} name={question.id} value={formData[question.id] || ''} onChange={handleInputChange} placeholder={question.placeholder} className={commonInputClass} />;
+                    case 'textarea':
+                        return <textarea name={question.id} value={formData[question.id] || ''} onChange={handleInputChange} placeholder={question.placeholder} rows="4" className={commonInputClass}></textarea>;
+                    case 'radio':
+                    case 'checkbox':
+                        const InputType = question.type;
+                        return (
+                            <div className="flex flex-col space-y-3">
+                                {question.options.map(option => {
+                                    const isChecked = InputType === 'radio'
+                                        ? formData[question.id] === option
+                                        : (formData[question.id] || []).includes(option);
+                                    
+                                    return (
+                                        <label key={option} className={`flex items-center p-3 rounded-lg cursor-pointer border-2 transition dark-choice-label ${isChecked ? 'checked' : ''}`}>
+                                            <input type={InputType} name={question.id} value={option} checked={isChecked} onChange={handleInputChange} className={`h-5 w-5 rounded focus:ring-purple-500 dark-${InputType}`} />
+                                            <span className="ml-3 text-gray-300 font-monospace text-sm">{option}</span>
+                                        </label>
+                                    );
+                                })}
+                            </div>
+                        );
+                    default: return null;
+                }
+            };
+
+            const renderModalContent = () => {
+                switch(view) {
+                    case 'section':
+                        return (
+                             <div className="text-center p-8 fade-in-up flex flex-col items-center justify-center h-full">
+                                 <img src={LOGO_URL} alt="Datapop Logo" className="modal-logo" />
+                                 <span className="text-lg font-semibold" style={{color: brandColor}}>Sección {currentSectionIndex + 1} / {sections.length}</span>
+                                <h2 className="text-3xl md:text-4xl font-extrabold text-white mt-2 mb-4">{currentSectionData.title}</h2>
+                                <p className="text-gray-400 text-base max-w-md mx-auto mb-8">{currentSectionData.description}</p>
+                                <button onClick={() => setView('question')} style={{ backgroundColor: brandColor }} className="text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:opacity-90 transition-transform transform hover:scale-105">Continuar</button>
+                            </div>
+                        );
+                    case 'question':
+                        return (
+                            <div className="fade-in w-full">
+                                <img src={LOGO_URL} alt="Datapop Logo" className="modal-logo" />
+                                <div className="w-full bg-gray-700 rounded-full h-2.5 mb-6 overflow-hidden">
+                                    <div className="h-full rounded-full transition-all duration-500 ease-out progress-bar-inner" style={{ width: `${progressPercentage}%` }}></div>
+                                </div>
+                                <h3 className="text-lg md:text-xl font-bold text-white mb-6 text-center font-monospace">{currentQuestionData.text}</h3>
+                                <div className="space-y-4">{renderInput(currentQuestionData)}</div>
+                                <div className="mt-8 flex justify-between items-center">
+                                    <button onClick={prevStep} disabled={currentSectionIndex === 0 && currentQuestionIndex === 0} className="text-gray-400 font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed">Atrás</button>
+                                    <button 
+                                        onClick={nextStep} 
+                                        style={{ backgroundColor: brandColor }} 
+                                        disabled={!isStepComplete}
+                                        className={`text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all transform hover:scale-105 ${isStepComplete ? 'next-button-ready' : 'opacity-50 cursor-not-allowed'}`}
+                                    >
+                                        {currentSectionIndex === sections.length - 1 && currentQuestionIndex === sections[sections.length - 1].questions.length - 1 ? 'Finalizar' : 'Siguiente'}
+                                    </button>
+                                </div>
+                            </div>
+                        );
+                    case 'submitting':
+                    case 'finished':
+                         return (
+                            <div className="text-center p-8 fade-in flex flex-col items-center justify-center h-full">
+                                <img src={LOGO_URL} alt="Datapop Logo" className="modal-logo" />
+                                {view === 'submitting' || submissionStatus === 'idle' ? (
+                                    <>
+                                        <h2 className="text-2xl md:text-3xl font-extrabold text-white">Enviando tus respuestas...</h2>
+                                        <p className="text-gray-400 mt-2">Por favor, espera un momento.</p>
+                                    </>
+                                ) : submissionStatus === 'success' ? (
+                                    <>
+                                        <svg className="w-20 h-20 mx-auto text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <h2 className="text-2xl md:text-3xl font-extrabold text-white">¡Gracias por tus respuestas!</h2>
+                                        <p className="text-gray-400 mt-2">Tus datos han sido guardados.</p>
+                                    </>
+                                ) : (
+                                     <>
+                                        <svg className="w-20 h-20 mx-auto text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <h2 className="text-2xl md:text-3xl font-extrabold text-white">Hubo un error</h2>
+                                        <p className="text-gray-400 mt-2">No pudimos guardar tus respuestas.</p>
+                                    </>
+                                )}
+                                {view === 'finished' && <button onClick={resetForm} style={{ backgroundColor: brandColor }} className="mt-8 w-full max-w-xs text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:opacity-90 transition-transform transform hover:scale-105">Cerrar</button>}
+                            </div>
+                        );
+                    default: return null;
+                }
+            };
+
+            return (
+                <>
+                    <KineticBackground />
+                    <BackgroundLogo />
+                    <div className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center text-center p-8">
+                        {view === 'welcome' && (
+                            <div className="fade-in flex flex-col items-center">
+                                <h1 className="text-4xl md:text-6xl font-black mb-4 text-white">
+                                    Conecta con los <span style={{ color: brandColor }}>Datos</span>
+                                </h1>
+                                <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-12">
+                                    Tu perspectiva es clave. Pulsa el botón para compartirla y ayúdanos a construir la mejor herramienta de visualización.
+                                </p>
+                                
+                                <div className="start-button" onClick={() => { setFormData({}); setCurrentSectionIndex(0); setCurrentQuestionIndex(0); setView('section'); }}>
+                                    <div className="icon">
+                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                            <path className="pupil" d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <span className="text">Tú perspectiva</span>
+                                </div>
+                            </div>
+                        )}
+                        
+                        {view !== 'welcome' && (
+                            <div className="fixed inset-0 flex items-center justify-center p-4 z-50 fade-in modal-container">
+                                <div className="modal-content rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 md:p-8 flex flex-col">
+                                    <button onClick={resetForm} className="close-button" aria-label="Cerrar formulario">
+                                        <svg className="h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                    {renderModalContent()}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </>
+            );
+        };
+        
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);
+
+    </script>
+
+</body>
+</html>
