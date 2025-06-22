@@ -28,7 +28,7 @@ export default function ConnectButton() {
       href="/form"
       className={styles.wrapper}
       aria-label="Ir a formulario de contacto"
-      target="_blank"
+      target="_self"
       rel="noopener noreferrer"
       onClick={handleClick}
     >
