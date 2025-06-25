@@ -16,8 +16,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Data Pop",
+  metadataBase: new URL('https://www.datapop.fun'), 
+  title: "DataPop",
   description: "Transformamos datos en experiencias visuales",
+  openGraph: {
+    title: "DataPop",
+    description: "Transformamos datos en experiencias visuales",
+    url: "https://www.datapop.fun/",
+    siteName: "DataPop",
+    images: [
+      {
+        url: "/Miniatura.png", 
+        width: 1200,
+        height: 630,
+        alt: "Miniatura de Data Pop",
+      },
+    ],
+    locale: "es_CO",
+    type: "website",
+  }
 };
 
 export default function RootLayout({
