@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,200..700;1,200..700&display=swap');
+
 .fixedWrapper {
   position: fixed;
   left: 50%;
@@ -54,9 +56,10 @@
 
 
 .paragraph {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   line-height: 1.62;
   font-weight: 400;
+  font-family: 'Cascadia Code', monospace;
   opacity: 0.96;
   text-shadow: 0 1px 8px #14286673;
 }

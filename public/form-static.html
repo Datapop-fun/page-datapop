@@ -259,7 +259,6 @@
 
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgOpLfMdj8BvW1OAxM6N--22oFTCNInjRXYMaWyt2o5ic3zVJEXIBjEfDcJGpkseLAIQ/exec";
         
-        const LOGO_URL = "https://i.ibb.co/mCQkMXxz/Iso-Datapop.png";
 
         const sections = [
             { 
@@ -479,11 +478,14 @@
 
        const BackgroundLogo = () => (
             <a 
-                href="https://www.datapop.fun/"
                 className="background-logo"
                 aria-label="Ir a la página de inicio de Datapop"
-                style={{ backgroundImage: `url(${LOGO_URL})` }}
-            ></a>
+                target="_top" rel="noopener noreferrer"
+                href="https://www.datapop.fun/"
+                
+            >
+            </a>
+            
         );
 
 
@@ -640,7 +642,6 @@
                     case 'finished':
                          return (
                             <div className="text-center p-8 fade-in flex flex-col items-center justify-center h-full">
-                                <img src={LOGO_URL} alt="Datapop Logo" className="modal-logo" />
                                 {view === 'submitting' || submissionStatus === 'idle' ? (
                                     <>
                                         <h2 className="text-2xl md:text-3xl font-extrabold text-white">Enviando tus respuestas...</h2>
@@ -714,6 +715,7 @@
         root.render(<App />);
 
     </script>
+      
 
 </body>
 </html>

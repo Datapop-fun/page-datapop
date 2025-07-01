@@ -34,7 +34,7 @@ export default function ConnectButton() {
     >
       <Lottie
         animationData={animationData}
-        loop
+        loop={false}
         autoplay
         className={styles.lottie}
       />

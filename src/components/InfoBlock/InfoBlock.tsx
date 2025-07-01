@@ -63,7 +63,7 @@ export default function InfoBlock() {
       <div className={styles.block} ref={blockRef}>
         <div className={styles.textBlock} ref={textRef}>
           <p className={styles.paragraph}>
-          transforma los datos empresariales en atractivas historias visuales que fomentan la conexión emocional y la comprensión. Combinando arte y diseño centrado en el ser humano, convertimos información compleja en experiencias intuitivas e interactivas que ayudan a los equipos a ver, sentir y actuar sobre lo que realmente importa.
+          Transforma los datos empresariales en atractivas historias visuales que fomentan la conexión emocional y la comprensión. Combinando arte y diseño centrado en el ser humano, convertimos información compleja en experiencias intuitivas e interactivas que ayudan a los equipos a ver, sentir y actuar sobre lo que realmente importa.
           </p>
         </div>
       </div>
