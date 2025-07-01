@@ -1,30 +1,72 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
+import gsap from 'gsap'
 import styles from './InfoBlock.module.css'
-import Image from "next/image";
 
 export default function InfoBlock() {
+  const blockRef = useRef<HTMLDivElement>(null)
+  const textRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const tl = gsap.timeline({ defaults: { ease: 'power2.inOut' } })
+    tl.fromTo(
+      blockRef.current,
+      {
+        scaleX: 0,
+        scaleY: 0,
+        opacity: 0.7,
+        backgroundColor: 'rgba(255,255,255,0.88)',
+        borderColor: 'rgba(255,255,255,0.82)',
+        transformOrigin: 'left bottom'
+      },
+      {
+        scaleX: 1,
+        scaleY: 1,
+        opacity: 1,
+        backgroundColor: 'rgba(37,81,245,0.53)',
+        borderColor: '#fff', 
+        duration: 1.6,
+        delay: 1.2,
+      }
+    )
+    .to(
+      blockRef.current,
+      {
+        borderColor: '#fff', 
+        boxShadow: '0 0 22px 2px #fff9, 0 4px 48px 0 rgba(18,24,52,0.14)',
+        duration: 0.45,
+        ease: 'power1.in'
+      },
+      "+=0.06"
+    )
+    .to(
+      blockRef.current,
+      {
+        borderColor: 'rgba(255,255,255,0.82)', 
+        boxShadow: '0 4px 48px 0 rgba(18,24,52,0.14)',
+        duration: 0.77,
+        ease: 'power1.out'
+      },
+      "+=0.21"
+    )
+    .fromTo(
+      textRef.current,
+      { opacity: 0, y: 28 },
+      { opacity: 1, y: 0, duration: 0.45 },
+      "-=0.24"
+    )
+  }, [])
+
   return (
-    <section className={styles.wrapper}>
-      <div className={styles.container}>
-        <Image
-          className={styles.image}
-          src="https://source.unsplash.com/200x200/?data,visualization"
-          alt="Logo gráfico de visualización de datos"
-          width={200}
-          height={200}
-        />
-        <div className={styles.textBlock}>
-          <h2 className={styles.title}>Dataview Insights</h2>
+    <div className={styles.fixedWrapper}>
+      <div className={styles.block} ref={blockRef}>
+        <div className={styles.textBlock} ref={textRef}>
           <p className={styles.paragraph}>
-            En Dataview Insights transformamos los datos empresariales en experiencias visuales
-            impactantes. Creamos dashboards interactivos, visualizaciones a medida y herramientas
-            intuitivas que permiten a los equipos entender, explorar y tomar decisiones basadas en
-            datos con precisión y claridad. Nuestro enfoque combina diseño, narrativa visual y
-            tecnología para convertir números en conocimiento accionable.
+          transforma los datos empresariales en atractivas historias visuales que fomentan la conexión emocional y la comprensión. Combinando arte y diseño centrado en el ser humano, convertimos información compleja en experiencias intuitivas e interactivas que ayudan a los equipos a ver, sentir y actuar sobre lo que realmente importa.
           </p>
         </div>
       </div>
-    </section>
+    </div>
   )
 }
