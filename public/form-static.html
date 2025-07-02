@@ -497,6 +497,7 @@
             const [view, setView] = useState('welcome');
             const [submissionStatus, setSubmissionStatus] = useState('idle');
             const [isStepComplete, setIsStepComplete] = useState(false);
+            const [glitchTriggerCount, setGlitchTriggerCount] = useState(0); // Added for glitch effect
 
             const brandColor = "#4a00ff";
             
@@ -669,7 +670,7 @@
 
             return (
                 <>
-                    <KineticBackground />
+                    <KineticBackground onGlitch={glitchTriggerCount} />
                     <BackgroundLogo />
                     <div className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center text-center p-8">
                         {view === 'welcome' && (
@@ -681,7 +682,7 @@
                                     Tu perspectiva es clave. Pulsa el botón para compartirla y ayúdanos a construir la mejor herramienta de visualización.
                                 </p>
                                 
-                                <div className="start-button" onClick={() => { setFormData({}); setCurrentSectionIndex(0); setCurrentQuestionIndex(0); setView('section'); }}>
+                                <div className="start-button" onClick={() => { setFormData({}); setCurrentSectionIndex(0); setCurrentQuestionIndex(0); setView('section'); setGlitchTriggerCount(prev => prev + 1); }}>
                                     <div className="icon">
                                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
