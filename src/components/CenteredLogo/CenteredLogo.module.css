@@ -13,7 +13,7 @@
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  transform: translateY(-10%); /* empuja visualmente hacia el centro */
+  transform: translateY(-10%);
 }
 
 .logo {
@@ -36,5 +36,18 @@
   100% {
     opacity: 1;
     transform: translate(-50%, -50%);
+  }
+}
+
+/* ---- MEDIA QUERY PARA MÓVIL ---- */
+@media (max-width: 600px) {
+  .wrapper {
+    top: 20%;
+  }
+  .logo {
+    width: 85vw;
+  }
+  .banner {
+    width: 92vw;
   }
 }
